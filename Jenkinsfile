@@ -21,11 +21,14 @@ node
 	{
 		sh "${mavenhome}/bin/mvn deploy"
 	}
-	stage('Deploy to TomCat') {
-    sh """
-    curl -u kk:password \
-    --upload-file target/maven-web-application.war \
-    'http://13.206.82.219:8080/manager/text/deploy?path=/maven-web-application&update=true'
-    """
+	stage('Deploy to TomCat')
+	{
+    withCredentials([usernamePassword(credentialsId: 'tomcat-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+        sh """
+        curl -u $USER:$PASS \
+        --upload-file target/maven-web-application.war \
+        "http://13.206.82.219:8080/manager/text/deploy?path=/maven-web-application&update=true"
+        """
+    }
 }
 }
