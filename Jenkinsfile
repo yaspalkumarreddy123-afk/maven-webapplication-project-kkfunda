@@ -3,7 +3,7 @@ pipeline
 	agent any
 	tools
 	{
-	  maven "maven-3.9.14"
+	  maven "maven-3.9.13"
 	}
 	stages
 	{
@@ -42,7 +42,7 @@ pipeline
 	      sh '''
             curl -u kk:password \
             --upload-file /var/lib/jenkins/workspace/Declarative-PL-Dev/target/maven-web-application.war \
-            "http://13.232.26.179:8080/manager/text/deploy?path=/maven-web-application&update=true"
+            "http://13.206.82.219:8080/manager/text/deploy?path=/maven-web-application&update=true"
             '''
 	   }
 	 }
