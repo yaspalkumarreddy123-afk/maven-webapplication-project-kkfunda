@@ -21,15 +21,17 @@ node
 	{
 		sh "${mavenhome}/bin/mvn deploy"
 	}
-	stage('Deploy to TomCat')
-	{
-    withCredentials([usernamePassword(credentialsId: 'tomcat-credentials', usernamevariable: 'USERNAME', passwordvariable: 'PASSWORD')])
-		{
-	        sh """
-	        curl -u $USERNAME:$PASSWORD \
-	        --upload-file /var/lib/jenkins/worksppcae/Pipeline-Project/target/maven-web-application.war \
-	        "http://13.206.82.219:8080/manager/text/deploy?path=/maven-web-application&update=true"
-	        """
+	stage('Deploy to TomCat') {
+    withCredentials([usernamePassword(
+        credentialsId: 'tomcat-credentials',
+        usernameVariable: 'USERNAME',
+        passwordVariable: 'PASSWORD'
+    )]) {
+        sh """
+        curl -u $USERNAME:$PASSWORD \
+        --upload-file target/maven-web-application.war \
+        "http://13.206.82.219:8080/manager/text/deploy?path=/maven-web-application&update=true"
+        """
     }
 }
 }
