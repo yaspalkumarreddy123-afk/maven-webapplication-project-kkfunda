@@ -23,7 +23,7 @@ node
 	}
 	stage('Deploy to TomCat')
 	{
-    withCredentials([usernamePassword(credentialsId: 'tomcat-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')])
+    withCredentials([usernamePassword(credentialsId: 'tomcat-credentials', usernamevariable: 'USERNAME', passwordvariable: 'PASSWORD')])
 		{
 	        sh """
 	        curl -u $USERNAME:$PASSWORD \
