@@ -1,4 +1,4 @@
-ode
+node
 {
 	def mavenhome = tool name : "maven-3.9.13"
 	stage('Check Out')
