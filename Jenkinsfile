@@ -21,15 +21,11 @@ node
 	{
 		sh "${mavenhome}/bin/mvn deploy"
 	}
-	stage('Deploy')
-	{
-	   steps
-	   {
-	      sh '''
-            curl -u kk:password \
-            --upload-file /var/lib/jenkins/workspace/Declarative-PL-Dev/target/maven-web-application.war \
-            "http://13.206.82.219:8080/manager/text/deploy?path=/maven-web-application&update=true"
-            '''
-	   }
-	 }
+	stage('Deploy to TomCat') {
+    sh """
+    curl -u kk:password \
+    --upload-file target/maven-web-application.war \
+    'http://13.206.82.219:8080/manager/text/deploy?path=/maven-web-application&update=true'
+    """
+}
 }
