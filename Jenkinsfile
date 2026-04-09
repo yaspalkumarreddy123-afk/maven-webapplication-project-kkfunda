@@ -1,42 +1,28 @@
-pipeline
+ode
 {
-	agent any
-	tools
+	def mavenhome = tool name : "maven-3.9.13"
+	stage('Check Out')
 	{
-	  maven "maven-3.9.13"
+		git branch: 'dev', url: 'https://github.com/yaspalkumarreddy123-afk/maven-webapplication-project-kkfunda.git'
 	}
-	stages
+	stage('Compile')
 	{
-	 stage('checkout')
-	 {
-	    steps
-	    {
-	   git branch: 'dev', url: 'https://github.com/yaspalkumarreddy123-afk/maven-webapplication-project-kkfunda.git'
-	   }
-	 }
-	 stage('Build')
-	 {
-	   steps
-	   {
-	      sh "mvn clean package"
-	   }
-	 }
-	 stage('SQ REPORT')
-	 {
-	   steps
-	   {
-	   sh "mvn sonar:sonar"
-	   }
-	 }
-	 stage('Upload to nexus')
-	 {
-	     steps
-	     {
-	    sh "mvn deploy"
-	     }
-	 }
-	 stage('Deploy to tomcat')
-	 {
+		sh "${mavenhome}/bin/mvn compile"
+	}
+	stage('Build')
+	{
+		sh "${mavenhome}/bin/mvn clean package"
+	}
+	stage('SonarQube Report')
+	{
+		sh "${mavenhome}/bin/mvn sonar:sonar"
+	}
+	stage('Deploy to Nexus')
+	{
+		sh "${mavenhome}/bin/mvn deploy"
+	}
+	stage('Deploy')
+	{
 	   steps
 	   {
 	      sh '''
@@ -46,7 +32,4 @@ pipeline
             '''
 	   }
 	 }
-
-	} //stages  ending
-
-} //pipeline ending
+}
