@@ -1,6 +1,8 @@
 node
 {
 	def mavenhome = tool name : "maven-3.9.13"
+	echo "git branch Name: ${env.BRANCH_NAME}"
+	echo "build number: ${env.BUILD_NUMBER}"
 	stage('Check Out')
 	{
 		git branch: 'dev', url: 'https://github.com/yaspalkumarreddy123-afk/maven-webapplication-project-kkfunda.git'
