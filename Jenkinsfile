@@ -1,42 +1,56 @@
-node
-{
-	def mavenhome = tool name : "maven-3.9.13"
-	echo "git branch Name: ${env.BRANCH_NAME}"
-	echo "build number: ${env.BUILD_NUMBER}"
-	stage('Check Out')
-	{
-		git branch: 'dev', url: 'https://github.com/yaspalkumarreddy123-afk/maven-webapplication-project-kkfunda.git'
-	}
-	stage('Compile')
-	{
-		sh "${mavenhome}/bin/mvn compile"
-	}
-	stage('Build')
-	{
-		sh "${mavenhome}/bin/mvn clean package"
-	}
-	stage('SonarQube Report')
-	{
-		sh "${mavenhome}/bin/mvn sonar:sonar"
-	}
-	stage('Deploy to Nexus')
-	{
-		sh "${mavenhome}/bin/mvn deploy"
-	}
-	stage('Deploy to TomCat') {
-    withCredentials([usernamePassword(
-        credentialsId: 'tomcat-credentials',
-        usernameVariable: 'USERNAME',
-        passwordVariable: 'PASSWORD'
-    )]) {
-        sh """
-        curl -u $USERNAME:$PASSWORD \
-        --upload-file target/maven-web-application.war \
-        "http://13.233.140.22:8080/manager/text/deploy?path=/maven-web-application&update=true"
-        """
+node {
+    def mavenhome = tool name: "maven-3.9.13"
+
+    // 🔔 Notify start
+    notifyBuild('STARTED')
+
+    try {
+        echo "git branch Name: ${env.BRANCH_NAME}"
+        echo "build number: ${env.BUILD_NUMBER}"
+
+        stage('Check Out') {
+            git branch: 'dev', url: 'https://github.com/yaspalkumarreddy123-afk/maven-webapplication-project-kkfunda.git'
+        }
+
+        stage('Compile') {
+            sh "${mavenhome}/bin/mvn compile"
+        }
+
+        stage('Build') {
+            sh "${mavenhome}/bin/mvn clean package"
+        }
+
+        stage('SonarQube Report') {
+            sh "${mavenhome}/bin/mvn sonar:sonar"
+        }
+
+        stage('Deploy to Nexus') {
+            sh "${mavenhome}/bin/mvn deploy"
+        }
+
+        stage('Deploy to TomCat') {
+            withCredentials([usernamePassword(
+                credentialsId: 'tomcat-credentials',
+                usernameVariable: 'USERNAME',
+                passwordVariable: 'PASSWORD'
+            )]) {
+                sh """
+                curl -u $USERNAME:$PASSWORD \
+                --upload-file target/maven-web-application.war \
+                "http://13.233.140.22:8080/manager/text/deploy?path=/maven-web-application&update=true"
+                """
+            }
+        }
+
+        // 🔔 Notify success
+        notifyBuild('SUCCESS')
+
+    } catch (err) {
+        // 🔔 Notify failure
+        notifyBuild('FAILURE')
+        throw err
     }
 }
-}//node ending
 def notifyBuild(String buildStatus = 'STARTED') {
   // build status of null means successful
   buildStatus =  buildStatus ?: 'SUCCESS'
