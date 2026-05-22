@@ -15,7 +15,7 @@ pipeline
               steps
               {
                  
-                 git branch: 'dev', url: 'https://github.com/kkdevopsb8/maven-webapplication-project-kkfunda.git'
+                 git branch: 'dev', url: 'https://github.com/yaspalkumarreddy123-afk/maven-webapplication-project-kkfunda.git'
               }
            }
            stage('compile')
