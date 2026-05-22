@@ -37,7 +37,7 @@ node {
                 sh """
                 curl -u $USERNAME:$PASSWORD \
                 --upload-file target/maven-web-application.war \
-                "http://13.206.251.13:8080/manager/text/deploy?path=/maven-web-application&update=true"
+                "http://13.201.29.253:8080/manager/text/deploy?path=/maven-web-application&update=true"
                 """
             }
         }
