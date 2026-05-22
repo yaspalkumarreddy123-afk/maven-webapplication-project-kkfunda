@@ -1,77 +1,52 @@
-
-//dev jenkins pipeline
 pipeline
 {
-    
-   agent any
-   tools
-   {
-      maven "maven-3.9.13"
-   }
-   stages
-   {
-           stage('git checkout')
-           {
-              steps
-              {
-                 
-                 git branch: 'dev', url: 'https://github.com/yaspalkumarreddy123-afk/maven-webapplication-project-kkfunda.git'
-              }
-           }
-           stage('compile')
-           {
-              steps
-              {
-                 sh "mvn compile"
-              }
-           }
-           stage('Build')
-           {
-             steps
-             {
-               sh "mvn clean package"
-             }
-           }
-         stage('SQ REPORT')
-           {
-             steps
-             {
-                sh "mvn sonar:sonar"
-             }
-           }   
-           stage('Deploy to nexus')
-           {
-              steps
-              {
-                sh "mvn clean deploy"
-              }
-           }
-           stage('Deploy to tomcat')
-           {
-              steps
-              {
-                 sh """
+	agent any
+	tools
+	{
+	  maven "maven-3.9.13"
+	}
+	stages
+	{
+	 stage('checkout')
+	 {
+	    steps
+	    {
+	   git branch: 'dev', url: 'https://github.com/yaspalkumarreddy123-afk/maven-webapplication-project-kkfunda.git'
+	   }
+	 }
+	 stage('Build')
+	 {
+	   steps
+	   {
+	      sh "mvn clean package"
+	   }
+	 }
+	 stage('SQ REPORT')
+	 {
+	   steps
+	   {
+	   sh "mvn sonar:sonar"
+	   }
+	 }
+	 stage('Upload to nexus')
+	 {
+	     steps
+	     {
+	    sh "mvn deploy"
+	     }
+	 }
+	 stage('Deploy to tomcat')
+	 {
+	   steps
+	   {
+	      sh '''
+            curl -u kk:password \
+            --upload-file /var/lib/jenkins/workspace/MBPL-Pipeline_f1/target/maven-web-application.war \
+            "http://13.201.29.253:8080/manager/text/deploy?path=/maven-web-application&update=true"
+            '''
+	   }
+	 }
 
-      curl -u kk:password \
---upload-file /var/lib/jenkins/workspace/MBPL-Pipeline_f9/target/maven-web-application.war \
-"http://13.201.29.253:8080/manager/text/deploy?path=/maven-web-application&update=true"
-          
-        """
-              }
-           }
-           stage('airtel-qa')
-           {
-              steps
-              {
-                 build job: 'airtel-qa'  //This down stream job
-              }
-           }
+	} //stages  ending
 
-   }  //stages ending
-
-   } //pipeline ending
-
-
-
-
-
+} //pipeline ending
