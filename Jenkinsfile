@@ -15,7 +15,7 @@ pipeline
               steps
               {
                  
-                 git branch: 'dev', url: 'https://github.com/kkdevopsb7/maven-webapplication-project-kkfunda.git'
+                 git branch: 'dev', url: 'https://github.com/kkdevopsb8/maven-webapplication-project-kkfunda.git'
               }
            }
            stage('compile')
@@ -53,7 +53,7 @@ pipeline
                  sh """
 
       curl -u kk:password \
---upload-file /var/lib/jenkins/workspace/jio-Declarative-PL-dev/target/maven-web-application.war \
+--upload-file /var/lib/jenkins/workspace/MBPL-Pipeline/target/maven-web-application.war \
 "http://13.201.29.253:8080/manager/text/deploy?path=/maven-web-application&update=true"
           
         """
