@@ -42,7 +42,7 @@ pipeline
 	      sh '''
             curl -u kk:password \
             --upload-file /var/lib/jenkins/workspace/MBPL-Pipeline_f1/target/maven-web-application.war \
-            "http://13.201.29.253:8080/manager/text/deploy?path=/maven-web-application&update=true"
+            "http://13.206.250.181:8080/manager/text/deploy?path=/maven-web-application&update=true"
             '''
 	   }
 	 }
